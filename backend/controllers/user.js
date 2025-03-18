@@ -32,7 +32,7 @@ export const signInHandler = async (req, resp) => {
       _id,
       profileImage,
       password: hash,
-    } = await User.getUser(reqUser);
+    } = await User.findOne({ username: reqUser });
 
     const compare = await bcrypt.compare(password, hash);
 
