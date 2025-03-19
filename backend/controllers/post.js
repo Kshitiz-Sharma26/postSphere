@@ -1,15 +1,21 @@
 import Post from "../models/post.js";
+import { uploadImageToCloudinary } from "../utility/cloudinary.js";
+import fs from "fs";
 
 export const handlePostUpload = async (req, resp) => {
   const { caption } = req.body;
   const { id } = req.user;
-  const postImage = req.file;
+  const imagePath = req.file.path;
+  let imageUrl;
 
   try {
+    imageUrl = await uploadImageToCloudinary(imagePath);
+    fs.unlinkSync(imagePath);
+
     await Post.create({
       caption,
       createdBy: id,
-      image: postImage,
+      image: imageUrl,
       comments: [],
       likes: [],
     });

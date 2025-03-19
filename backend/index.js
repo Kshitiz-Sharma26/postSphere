@@ -2,7 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import makeDbConnection from "./dbConnection.js";
 import userRouter from "./routes/user.js";
+import postRouter from "./routes/post.js";
 import cookieParser from "cookie-parser";
+import { configureCloudinary } from "./utility/cloudinary.js";
 dotenv.config();
 
 const app = express();
@@ -13,8 +15,10 @@ app.use(cookieParser());
 
 // make database connection
 makeDbConnection();
+configureCloudinary();
 
 app.use("/user", userRouter);
+app.use("/post", postRouter);
 
 app.listen(PORT, () => {
   console.log(`listening at port: ${PORT}`);

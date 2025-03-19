@@ -4,7 +4,7 @@ dotenv.config();
 const jwtSecret = process.env.JWT_SECRET;
 
 export const requireAuth = async (req, resp, next) => {
-  const token = req.cookies("auth_token");
+  const token = req.cookies["auth_token"];
   try {
     const user = jwt.verify(token, jwtSecret);
     req.user = user;

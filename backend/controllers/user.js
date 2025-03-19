@@ -27,13 +27,12 @@ export const signUpHandler = async (req, resp) => {
 export const signInHandler = async (req, resp) => {
   const { password, username: reqUser } = req.body;
   try {
-    const {
-      username,
-      _id,
-      profileImage,
-      password: hash,
-    } = await User.findOne({ username: reqUser });
-
+    const user = await User.findOne({ username: reqUser });
+    if (!user)
+      return resp.status(404).json({
+        message: "User doesnot exists.",
+      });
+    const { username, _id, profileImage, password: hash } = user;
     const compare = await bcrypt.compare(password, hash);
 
     if (compare) {
