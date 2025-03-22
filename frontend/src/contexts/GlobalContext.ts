@@ -1,5 +1,7 @@
 import { createContext } from "react";
+import { GlobalContextType, initialGlobalState } from "../constants";
 
-const GlobalContext = createContext({});
-
-export default GlobalContext;
+export const GlobalContext = createContext<GlobalContextType>({
+  state: initialGlobalState,
+  dispatch: () => {},
+});

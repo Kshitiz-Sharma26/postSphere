@@ -64,3 +64,10 @@ export const logoutHandler = (req, resp) => {
     message: "User logged out",
   });
 };
+
+export const getCurrentUser = (req, resp) => {
+  return resp.status(200).json({
+    message: "User authenticated.",
+    data: req.user,
+  });
+};

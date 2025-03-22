@@ -1,26 +1,41 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import GlobalContextProvider from "./contexts/GlobalContextProvider";
 import "./App.css";
+import { ThemeProvider } from "@emotion/react";
+import { createTheme, CssBaseline } from "@mui/material";
+import { useContext } from "react";
+import { GlobalContext } from "./contexts/GlobalContext.ts";
+import PrivateRoutes from "./authorization/PrivateRoutes.tsx";
+import Home from "./pages/Home.tsx";
+import Login from "./pages/Login.tsx";
 
 function App() {
+  const globalState = useContext(GlobalContext);
+  const { state } = globalState;
+  const { theme } = state;
   return (
-    <GlobalContextProvider>
+    <ThemeProvider
+      theme={createTheme({
+        palette: {
+          mode: theme,
+        },
+      })}
+    >
+      <CssBaseline />
       <BrowserRouter>
         <Routes>
           {/* Private Routes */}
-          <Route element={<></>}>
-            <Route path="/home" element={<></>} />
+          <Route element={<PrivateRoutes />}>
+            <Route path="" element={<Home />} />
             <Route path="/profile" element={<></>} />
             <Route path="/edit-profile" element={<></>} />
           </Route>
           {/* Public Routes */}
           <Route element={<></>}>
-            <Route path="/login" element={<></>} />
+            <Route path="/login" element={<Login />} />
           </Route>
         </Routes>
       </BrowserRouter>
-      hello
-    </GlobalContextProvider>
+    </ThemeProvider>
   );
 }
 

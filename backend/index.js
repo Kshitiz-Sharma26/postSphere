@@ -4,6 +4,7 @@ import makeDbConnection from "./dbConnection.js";
 import userRouter from "./routes/user.js";
 import postRouter from "./routes/post.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import { configureCloudinary } from "./utility/cloudinary.js";
 dotenv.config();
 
@@ -12,6 +13,7 @@ const PORT = process.env.PORT;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors());
 
 // make database connection
 makeDbConnection();

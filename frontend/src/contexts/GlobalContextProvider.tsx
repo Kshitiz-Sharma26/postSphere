@@ -1,18 +1,6 @@
 import { useReducer } from "react";
-import GlobalContext from "./GlobalContext";
-
-type Action = {
-  type: string;
-  payload: any;
-};
-type State = {
-  isLoading: boolean;
-  [key: string]: any;
-};
-const initialState: State = {
-  userInfo: {},
-  isLoading: false,
-};
+import { Action, initialGlobalState, State } from "../constants";
+import { GlobalContext } from "./GlobalContext";
 
 function reducer(state: State, action: Action) {
   switch (action.type) {
@@ -26,6 +14,11 @@ function reducer(state: State, action: Action) {
         ...state,
         userInfo: action.payload,
       };
+    case "SET_THEME":
+      return {
+        ...state,
+        theme: action.payload,
+      };
     default:
       return state;
   }
@@ -34,7 +27,7 @@ function reducer(state: State, action: Action) {
 const GlobalContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialGlobalState);
 
   return (
     <>
