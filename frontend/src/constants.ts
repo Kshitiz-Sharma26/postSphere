@@ -19,12 +19,12 @@ export type Action = SetUserInfoAction | SetIsLoadingAction | SetThemeAction;
 
 export type State = {
   isLoading: boolean;
-  userInfo: object;
+  userInfo?: UserInfo;
   theme: "dark" | "light";
 };
 
 export const initialGlobalState: State = {
-  userInfo: {},
+  userInfo: undefined,
   isLoading: false,
   theme: "light",
 };

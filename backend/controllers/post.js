@@ -58,3 +58,19 @@ export const handleUnlikePost = async (req, resp) => {
     return resp.status(500).json({ message: "Internal server error." });
   }
 };
+
+export const handleGetPosts = async (req, resp) => {
+  const { users } = req.body;
+  console.log(users);
+  try {
+    const posts = await Post.find({ createdBy: { $in: users } });
+    return resp.status(200).json({
+      message: "Posts found.",
+      data: posts,
+    });
+  } catch (error) {
+    return resp.status(500).json({
+      message: "Internal server error.",
+    });
+  }
+};

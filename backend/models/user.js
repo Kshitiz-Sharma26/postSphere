@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema(
   {
     username: {
       type: String,
-      require: true,
+      required: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -16,9 +17,9 @@ const userSchema = new mongoose.Schema(
       default:
         "https://res.cloudinary.com/drzuhbx8a/image/upload/v1741922899/xrgawjwjvkkwbluen9du.avif",
     },
-    requests: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
-      default: [],
+    bio: {
+      type: String,
+      default: "",
     },
     friends: {
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],

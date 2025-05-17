@@ -4,10 +4,8 @@ import { z } from "zod";
 import { Box, TextField, Typography, Button, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import useApiCall from "../hooks/useApiCall";
-import { loginUserAPI } from "../utility/apiService";
+import { signUpUserAPI } from "../utility/apiService";
 import { toast } from "react-toastify";
-import { useContext } from "react";
-import { GlobalContext } from "../contexts/GlobalContext";
 
 // Define the schema
 const schema = z.object({
@@ -23,16 +21,15 @@ const schema = z.object({
 // Infer the type from the schema
 type FormData = z.infer<typeof schema>;
 
-const Login: React.FC = () => {
-  const { dispatch } = useContext(GlobalContext);
+const Signup: React.FC = () => {
   const navigate = useNavigate();
-  const { fetchData: loginUser } = useApiCall<
+  const { fetchData: signupUser, error } = useApiCall<
     undefined,
     {
       username: string;
       password: string;
     }
-  >(loginUserAPI);
+  >(signUpUserAPI);
   const {
     register,
     handleSubmit,
@@ -42,24 +39,11 @@ const Login: React.FC = () => {
   });
 
   const onSubmit = async (data: FormData) => {
-    dispatch({
-      type: "SET_LOADING",
-      payload: true,
-    });
-    const resp = await loginUser({
+    await signupUser({
       username: data.username,
       password: data.password,
     });
-    if (resp?.message) {
-      toast.error(resp.message);
-    } else if (resp?.data) {
-      navigate("/");
-      document.location.reload();
-    }
-    dispatch({
-      type: "SET_LOADING",
-      payload: false,
-    });
+    if (error) toast.error(error);
   };
 
   return (
@@ -175,21 +159,21 @@ const Login: React.FC = () => {
                   },
                 }}
               >
-                Log In
+                Sign Up
               </Button>
             </Box>
           </form>
           <div className="text-black text-center mt-2 text-sm">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <Link
               component="button"
               variant="body2"
               underline="none"
               onClick={() => {
-                navigate("/signup");
+                navigate("/login");
               }}
             >
-              Sign up
+              Login
             </Link>
           </div>
         </Box>
@@ -198,4 +182,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Signup;

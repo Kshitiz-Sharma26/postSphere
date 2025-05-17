@@ -5,7 +5,9 @@ import { getCurrentUserAPI } from "../utility/apiService";
 import { GlobalContextType, UserInfo } from "../constants";
 import { GlobalContext } from "../contexts/GlobalContext";
 
-const PrivateRoutes = () => {
+const RoutesCheck: React.FC<{
+  route: "private" | "public";
+}> = ({ route }) => {
   const { dispatch }: GlobalContextType = useContext(GlobalContext);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const {
@@ -16,19 +18,20 @@ const PrivateRoutes = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      await getCurrentUser();
+      const resp = await getCurrentUser(undefined);
 
-      if (user) {
+      if (resp.data) {
         setIsAuthenticated(true);
         dispatch({
           type: "SET_USER_INFO",
-          payload: user,
+          payload: resp.data as UserInfo,
         });
       } else setIsAuthenticated(false);
     };
 
     checkAuth();
-  }, [dispatch, getCurrentUser, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
 
   useEffect(() => {
     dispatch({
@@ -37,7 +40,9 @@ const PrivateRoutes = () => {
     });
   }, [dispatch, loading]);
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  if (route === "private") {
+    return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  } else return !isAuthenticated ? <Outlet /> : <Navigate to="/" />;
 };
 
-export default PrivateRoutes;
+export default RoutesCheck;

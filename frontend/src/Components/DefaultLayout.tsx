@@ -10,7 +10,7 @@ const DefaultLayout: React.FC<{
       <Navbar />
 
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto">{children}</div>
+      <div className="flex-1 overflow-y-auto overflow-x-hidden">{children}</div>
 
       {/* Footer at the bottom */}
       <Footer />

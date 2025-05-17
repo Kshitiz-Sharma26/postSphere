@@ -16,13 +16,19 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { GlobalContext } from "../contexts/GlobalContext";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useNavigate } from "react-router-dom";
 
-const pages = ["Search", "Chat", "Post"];
+const pages = [
+  { label: "Search", link: "/search" },
+  { label: "Chat", link: "/chat-room" },
+  { label: "Post", link: "/post" },
+];
 
 function Navbar() {
   const globalState = React.useContext(GlobalContext);
   const { state, dispatch } = globalState;
-  const { theme } = state;
+  const { theme, userInfo } = state;
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -45,6 +51,12 @@ function Navbar() {
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    setAnchorElUser(null);
+    document.cookie =
+      "auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+    window.location.reload();
+  };
   const handleChangeTheme = () => {
     setAnchorElUser(null);
     dispatch({
@@ -60,8 +72,7 @@ function Navbar() {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component="button"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -70,6 +81,9 @@ function Navbar() {
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
+            }}
+            onClick={() => {
+              navigate("/");
             }}
           >
             POSTSPHERE
@@ -103,8 +117,16 @@ function Navbar() {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>{page}</Typography>
+                <MenuItem
+                  key={page.label}
+                  onClick={() => {
+                    navigate(page.link);
+                    handleCloseNavMenu();
+                  }}
+                >
+                  <Typography sx={{ textAlign: "center" }}>
+                    {page.label}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -113,8 +135,7 @@ function Navbar() {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component="button"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -125,17 +146,23 @@ function Navbar() {
               color: "inherit",
               textDecoration: "none",
             }}
+            onClick={() => {
+              navigate("/");
+            }}
           >
             POSTSPHERE
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={page.label}
+                onClick={() => {
+                  navigate(page.link);
+                  handleCloseNavMenu();
+                }}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                {page}
+                {page.label}
               </Button>
             ))}
           </Box>
@@ -173,7 +200,12 @@ function Navbar() {
                   Theme
                 </Typography>
               </MenuItem>
-              <MenuItem key="profile" onClick={handleCloseUserMenu}>
+              <MenuItem
+                key="profile"
+                onClick={() => {
+                  navigate(`/profile/${userInfo?.username}`);
+                }}
+              >
                 <Typography
                   sx={{
                     textAlign: "center",
@@ -185,7 +217,7 @@ function Navbar() {
                   Profile
                 </Typography>
               </MenuItem>
-              <MenuItem key="profile" onClick={handleCloseUserMenu}>
+              <MenuItem key="profile" onClick={handleLogout}>
                 <Typography
                   sx={{
                     textAlign: "center",
